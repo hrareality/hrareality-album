@@ -114,7 +114,7 @@ Při nasazování na Vercel musíme nastavit proměnné prostředí odděleně p
 | **`DISCORD_CLIENT_SECRET`**| Preview | *Testovací Secret* | Client Secret testovací Discord aplikace |
 | **`AIRTABLE_API_TOKEN`** | Preview & Production | `pat...` | Tvůj Airtable Personal Access Token (PAT) |
 | **`AIRTABLE_BASE_ID`** | Preview & Production | `app...` | ID tvé Airtable databáze |
-| **`MAKE_WEBHOOK_SECRET`** | Preview & Production | *Vlastní silné heslo* | Tajný klíč pro zabezpečení webhooku (např. pro Make.com) |
+| **`WEBHOOK_SECRET`** | Preview & Production | *Vlastní silné heslo* | Tajný klíč pro zabezpečení webhooku (např. pro Make.com) |
 
 *NextAuth v5 (Next.js 16) na Vercelu automaticky detekuje systémovou proměnnou `VERCEL_URL` a nastaví podle ní vnitřní URL adresu, takže proměnnou `NEXTAUTH_URL` již ve Vercelu nemusíš ručně konfigurovat!*
 
