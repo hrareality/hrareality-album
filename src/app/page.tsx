@@ -20,13 +20,9 @@ export default function Home() {
             <Sparkles size={12} />
             SEASON 0 ALBUM
           </div>
-          <div className="py-2">
-            <img
-              src="/logo.png"
-              alt="Hra Reality Logo"
-              className="h-14 sm:h-16 mx-auto object-contain"
-            />
-          </div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-display bg-gradient-to-r from-white via-slate-100 to-purple-400 bg-clip-text text-transparent">
+            HRA REALITY
+          </h1>
           <p className="text-sm text-slate-400 font-medium">
             Přestaň jen sledovat svůj život — začni ho hrát.
           </p>
