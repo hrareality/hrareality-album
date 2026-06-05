@@ -68,11 +68,15 @@ export default async function AlbumPage() {
       {/* FIXED HEADER */}
       <header className="sticky top-0 z-40 bg-[#060608]/80 backdrop-blur-xl border-b border-white/5 shadow-lg">
         <div className="max-w-5xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_10px_rgb(168,85,247)] animate-pulse" />
-            <h1 className="font-display font-bold tracking-widest text-sm sm:text-base uppercase text-slate-100">
-              HRA REALITY <span className="text-purple-400">ALBUM</span>
-            </h1>
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo.png"
+              alt="Hra Reality Logo"
+              className="h-8 sm:h-10 object-contain"
+            />
+            <span className="text-[10px] font-bold font-display px-2 py-0.5 rounded border border-purple-500/20 bg-purple-500/5 text-purple-400 tracking-widest uppercase">
+              ALBUM
+            </span>
           </div>
 
           <div className="flex items-center gap-4">
