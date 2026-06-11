@@ -2,7 +2,7 @@ import { signIn } from "@/lib/auth";
 import { Sparkles } from "lucide-react";
 
 export const metadata = {
-  title: "Hra Reality | Sběratelské Album Hráče",
+  title: "iWau HRA REALITY | Sběratelské Album Hráče",
   description: "Přihlas se svým Discord účtem, zobraz si své získané artefakty, odemkni exkluzivní status a sleduj svůj celkový herní progress.",
   icons: {
     icon: "/icon.png",
@@ -24,7 +24,7 @@ export default function Home() {
             SEASON 0 ALBUM
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-display bg-gradient-to-r from-white via-slate-100 to-purple-400 bg-clip-text text-transparent">
-            HRA REALITY
+            iWau HRA REALITY
           </h1>
           <p className="text-sm text-slate-400 font-medium">
             Přestaň jen sledovat svůj život — začni ho hrát.
