@@ -4,6 +4,9 @@ import { Sparkles, ArrowLeft } from "lucide-react";
 export const metadata = {
   title: "Hra Reality | Veřejné Album Hráče",
   description: "Sdílení osobních alb a herních profilů s komunitou. Již brzy v další fázi hry.",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function PublicAlbumPage() {

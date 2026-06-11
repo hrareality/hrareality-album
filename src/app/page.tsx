@@ -4,6 +4,9 @@ import { Sparkles } from "lucide-react";
 export const metadata = {
   title: "Hra Reality | Sběratelské Album Hráče",
   description: "Přihlas se svým Discord účtem, zobraz si své získané artefakty, odemkni exkluzivní status a sleduj svůj celkový herní progress.",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function Home() {

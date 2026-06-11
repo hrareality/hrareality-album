@@ -18,6 +18,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Hra Reality | Sběratelské Album Hráče",
   description: "Zobraz si své získané artefakty, odemkni exkluzivní status a sleduj svůj celkový herní progress v albu.",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({

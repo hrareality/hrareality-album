@@ -25,6 +25,7 @@ interface AlbumClientProps {
 
 export default function AlbumClient({ cards }: AlbumClientProps) {
   const [selectedCard, setSelectedCard] = useState<AlbumCard | null>(null);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   // Funkce pro získání neonových stylů rodin karet
   const getFamilyStyles = (family: string) => {
@@ -97,7 +98,7 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
   return (
     <>
       {/* Grid karet */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {cards.map((card) => {
           const styles = getFamilyStyles(card.family);
           
@@ -108,15 +109,20 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
           return (
             <motion.div
               key={card.card_id}
-              onClick={() => card.isOwned && setSelectedCard(card)}
-              className={`glass-card overflow-hidden border flex flex-col h-full relative group transition-all duration-300 ${
+              onClick={() => {
+                if (card.isOwned) {
+                  setSelectedCard(card);
+                  setIsFlipped(false);
+                }
+              }}
+              className={`glass-card overflow-hidden border flex flex-col h-full relative group transition-all duration-500 ${
                 card.isOwned
-                  ? `cursor-pointer border-white/10 hover:border-white/20 hover:bg-[#0e0e12] ${styles.glow}`
-                  : "border-white/5 opacity-55 shadow-none"
+                  ? `cursor-pointer hover:scale-[1.02] border-white/10 hover:border-white/20 hover:bg-[#0e0e12] ${styles.glow}`
+                  : "border-white/5 opacity-70 shadow-none pointer-events-none"
               }`}
             >
               {/* Asset karty nebo silueta */}
-              <div className="aspect-[7/10] relative w-full overflow-hidden bg-black/70 flex items-center justify-center border-b border-white/5 select-none">
+              <div className="aspect-[7/10] relative w-full overflow-hidden bg-black/50 flex items-center justify-center border-b border-white/5 select-none">
                 {card.isOwned && card.image_url ? (
                   <img
                     src={card.image_url}
@@ -125,19 +131,19 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                   />
                 ) : (
                   // Prémiová zástupná silueta s neonovým gradientem
-                  <div className={`w-full h-full bg-gradient-to-b flex flex-col items-center justify-center p-4 relative overflow-hidden ${styles.neonBg}`}>
+                  <div className={`w-full h-full bg-gradient-to-b flex flex-col items-center justify-center p-6 relative overflow-hidden ${styles.neonBg}`}>
                     <div className={`absolute w-[150%] h-[1px] rotate-45 opacity-20 top-1/4 ${styles.neonLine}`} />
                     <div className={`absolute w-[150%] h-[1px] -rotate-45 opacity-20 bottom-1/4 ${styles.neonLine}`} />
                     
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-white/10 bg-white/5 flex items-center justify-center relative z-10 shadow-inner">
+                    <div className="w-18 h-18 rounded-full border border-white/10 bg-white/5 flex items-center justify-center relative z-10 shadow-inner">
                       {isFullyHidden ? (
-                        <Lock className="text-white/30 w-6 h-6" />
+                        <Lock className="text-white/30 w-9 h-9" />
                       ) : (
-                        <HelpCircle className="text-white/30 w-6 h-6" />
+                        <HelpCircle className="text-white/30 w-9 h-9" />
                       )}
                     </div>
                     
-                    <span className="text-[9px] font-display font-semibold tracking-[0.2em] uppercase text-white/30 mt-3 relative z-10">
+                    <span className="text-xs font-display font-semibold tracking-[0.3em] uppercase text-white/35 mt-4 relative z-10">
                       {card.family.replace("_", " ")}
                     </span>
                   </div>
@@ -145,11 +151,11 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
 
                 {/* Locked overlay na nevlastněné kartě */}
                 {!card.isOwned && (
-                  <div className="absolute inset-0 bg-black/75 flex flex-col items-center justify-center z-20 backdrop-blur-[1px]">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-                      <Lock size={16} className="text-white/50" />
+                  <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-20 backdrop-blur-[2px]">
+                    <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-3">
+                      <Lock size={22} className="text-white/60" />
                     </div>
-                    <span className="font-display text-[10px] font-bold text-white/50 tracking-widest uppercase">
+                    <span className="font-display text-base font-bold text-white/60 tracking-wider uppercase">
                       {isFullyHidden ? "Uzamčeno" : "Nezískáno"}
                     </span>
                   </div>
@@ -157,33 +163,36 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
 
                 {/* Floating Family Badge */}
                 {card.isOwned && (
-                  <span className={`absolute top-2.5 left-2.5 text-[8px] font-bold font-display px-2 py-0.5 rounded border tracking-wider ${styles.text}`}>
+                  <span className={`absolute top-4 left-4 text-xs font-bold font-display px-2.5 py-1 rounded border tracking-wider ${styles.text}`}>
                     {card.family.replace("_", " ")}
                   </span>
                 )}
               </div>
 
               {/* Popis a jméno karty pod obrázkem */}
-              <div className="p-4 flex-1 flex flex-col justify-between">
+              <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between gap-1.5 mb-1.5">
-                    <h5 className="font-display font-bold text-xs tracking-wider uppercase text-slate-100 truncate flex-1">
+                  <div className="flex items-center justify-between gap-3 mb-3">
+                    <h5 className="font-display font-bold text-base sm:text-lg tracking-wider uppercase text-slate-100 truncate flex-1">
                       {isFullyHidden ? "???" : card.name}
                     </h5>
                     
-                    {/* Edition Badge */}
+                    {/* Rarity/Edition Badge */}
                     {card.isOwned && (
-                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded shrink-0 border ${
-                        card.user_edition === "FIRST_EDITION"
-                          ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                          : "bg-white/5 text-white/50 border-white/10"
+                      <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded shrink-0 border uppercase tracking-wider ${
+                        card.user_edition === "LEGENDARY" || card.user_edition === "FIRST_EDITION"
+                          ? "bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.2)] flex items-center gap-1"
+                          : card.user_edition === "RARE"
+                            ? "bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.15)]"
+                            : "bg-white/5 text-white/50 border-white/10"
                       }`}>
-                        {card.user_edition === "FIRST_EDITION" ? "1ST ED" : "BASE"}
+                        {(card.user_edition === "LEGENDARY" || card.user_edition === "FIRST_EDITION") && <Sparkles size={10} className="text-amber-400" />}
+                        {card.user_edition === "FIRST_EDITION" ? "1ST ED" : card.user_edition === "BASE" ? "BASE" : card.user_edition}
                       </span>
                     )}
                   </div>
                   
-                  <p className="text-[10px] text-slate-400 leading-relaxed italic line-clamp-2">
+                  <p className="text-sm text-slate-400 leading-relaxed italic mt-2">
                     {card.isOwned 
                       ? card.lore 
                       : isRevealedButUnowned 
@@ -227,32 +236,122 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                   <X size={16} />
                 </button>
 
-                {/* Levá část: Karta */}
-                <div className="w-full md:w-[45%] aspect-[7/10] relative bg-black flex items-center justify-center border-b md:border-b-0 md:border-r border-white/5 select-none">
-                  {selectedCard.image_url ? (
-                    <img
-                      src={selectedCard.image_url}
-                      alt={selectedCard.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className={`w-full h-full bg-gradient-to-b flex flex-col items-center justify-center p-6 relative overflow-hidden ${styles.neonBg}`}>
-                      <div className={`absolute w-[150%] h-[1px] rotate-45 opacity-20 top-1/4 ${styles.neonLine}`} />
-                      <div className={`absolute w-[150%] h-[1px] -rotate-45 opacity-20 bottom-1/4 ${styles.neonLine}`} />
-                      <div className="w-14 h-14 rounded-full border border-white/10 bg-white/5 flex items-center justify-center relative z-10 shadow-inner">
-                        <HelpCircle className="text-white/30 w-7 h-7" />
-                      </div>
-                      <span className="text-[10px] font-display font-semibold tracking-[0.2em] uppercase text-white/35 mt-4 relative z-10">
-                        {selectedCard.family.replace("_", " ")}
-                      </span>
-                    </div>
-                  )}
+                 {/* Levá část: Karta s 3D otáčením */}
+                 <div className="w-full md:w-[45%] flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/5 select-none bg-black/40 p-6 sm:p-8 gap-4 relative">
+                   <div 
+                     className="w-full relative transition-transform duration-700 cursor-pointer"
+                     style={{ 
+                       transformStyle: "preserve-3d",
+                       transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                       aspectRatio: "7/10"
+                     }}
+                     onClick={() => setIsFlipped(!isFlipped)}
+                   >
+                     {/* Lícová strana (Přední strana karty) */}
+                     <div 
+                       className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden rounded-xl border border-white/10"
+                       style={{ backfaceVisibility: "hidden" }}
+                     >
+                       {selectedCard.image_url ? (
+                         <img
+                           src={selectedCard.image_url}
+                           alt={selectedCard.name}
+                           className="w-full h-full object-cover"
+                         />
+                       ) : (
+                         <div className={`w-full h-full bg-gradient-to-b flex flex-col items-center justify-center p-6 relative overflow-hidden ${styles.neonBg}`}>
+                           <div className={`absolute w-[150%] h-[1px] rotate-45 opacity-20 top-1/4 ${styles.neonLine}`} />
+                           <div className={`absolute w-[150%] h-[1px] -rotate-45 opacity-20 bottom-1/4 ${styles.neonLine}`} />
+                           <div className="w-18 h-18 rounded-full border border-white/10 bg-white/5 flex items-center justify-center relative z-10 shadow-inner">
+                             <HelpCircle className="text-white/30 w-9 h-9" />
+                           </div>
+                           <span className="text-xs font-display font-semibold tracking-[0.3em] uppercase text-white/35 mt-4 relative z-10">
+                             {selectedCard.family.replace("_", " ")}
+                           </span>
+                         </div>
+                       )}
 
-                  {/* Badge edice ve foto rohu */}
-                  <span className={`absolute top-4 left-4 text-[9px] font-bold font-display px-2 py-0.5 rounded border tracking-wider ${styles.text}`}>
-                    {selectedCard.family.replace("_", " ")}
-                  </span>
-                </div>
+                       {/* Badge edice ve foto rohu */}
+                       <span className={`absolute top-4 left-4 text-[9px] font-bold font-display px-2 py-0.5 rounded border tracking-wider ${styles.text}`}>
+                         {selectedCard.family.replace("_", " ")}
+                       </span>
+                     </div>
+
+                     {/* Rubová strana (Zadní strana karty) */}
+                     <div 
+                       className={`absolute inset-0 w-full h-full rounded-xl border p-6 flex flex-col justify-between bg-gradient-to-b ${styles.neonBg} ${styles.glow}`}
+                       style={{ 
+                         backfaceVisibility: "hidden", 
+                         transform: "rotateY(180deg)",
+                         borderWidth: "1.5px"
+                       }}
+                     >
+                       {/* Cybernetický grid na pozadí */}
+                       <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:16px_16px]" />
+
+                       {/* Hlavička zadní strany */}
+                       <div className="flex items-center justify-between relative z-10">
+                         <span className="text-[10px] font-bold font-display text-slate-500 tracking-wider">HRA REALITY</span>
+                         <span className="text-[8px] font-mono text-slate-500 font-bold tracking-widest">{selectedCard.card_id}</span>
+                       </div>
+
+                       {/* Středový hologram */}
+                       <div className="flex-1 flex flex-col items-center justify-center relative z-10 py-4">
+                         <div 
+                           className="w-16 h-16 rounded-full border flex items-center justify-center relative animate-pulse"
+                           style={{ 
+                             borderColor: `rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.35)`,
+                             boxShadow: `0 0 20px rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.2)`
+                           }}
+                         >
+                           <div 
+                             className="w-12 h-12 rounded-full flex items-center justify-center text-center font-display font-extrabold text-[9px] uppercase tracking-wider text-slate-200"
+                             style={{
+                               background: `rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.1)`,
+                               textShadow: `0 0 5px rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.8)`
+                             }}
+                           >
+                             ALBUM
+                           </div>
+                         </div>
+                         <span className="font-display font-bold text-[10px] tracking-[0.25em] text-slate-300 uppercase mt-3">
+                           KRONIKA HRA Reality
+                         </span>
+                       </div>
+
+                       {/* Vlastnosti a status */}
+                       <div className="space-y-1.5 relative z-10 border-t border-white/5 pt-4">
+                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
+                           <span>Třída:</span>
+                           <span className="text-slate-200 font-bold">HRÁČ S0</span>
+                         </div>
+                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
+                           <span>Rodina:</span>
+                           <span className="text-slate-200 font-bold">{selectedCard.family.replace("_", " ")}</span>
+                         </div>
+                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
+                           <span>Rarita / Edice:</span>
+                           <span className="text-slate-200 font-bold uppercase">
+                             {selectedCard.user_edition === "FIRST_EDITION" ? "1ST EDITION" : selectedCard.user_edition === "BASE" ? "BASE" : selectedCard.user_edition}
+                           </span>
+                         </div>
+                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
+                           <span>Status:</span>
+                           <span className="text-purple-400 font-bold">ODEMČENO</span>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+
+                   {/* Tlačítko pro otočení karty */}
+                   <button
+                     onClick={() => setIsFlipped(!isFlipped)}
+                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-bold text-slate-400 hover:text-white uppercase tracking-wider transition-all duration-300 cursor-pointer"
+                   >
+                     <Compass size={12} className="animate-spin-slow text-purple-400" />
+                     Otočit kartu
+                   </button>
+                 </div>
 
                 {/* Pravá část: Lore detaily */}
                 <div className="p-6 md:p-8 flex-1 flex flex-col justify-between">
@@ -262,13 +361,15 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                         <h3 className="font-display font-bold text-xl uppercase tracking-wider text-white">
                           {selectedCard.name}
                         </h3>
-                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded border tracking-wider flex items-center gap-0.5 shrink-0 ${
-                          selectedCard.user_edition === "FIRST_EDITION"
+                         <span className={`text-[9px] font-bold px-2 py-0.5 rounded border tracking-wider flex items-center gap-0.5 shrink-0 uppercase ${
+                          selectedCard.user_edition === "LEGENDARY" || selectedCard.user_edition === "FIRST_EDITION"
                             ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                            : "bg-white/5 text-white/50 border-white/10"
+                            : selectedCard.user_edition === "RARE"
+                              ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                              : "bg-white/5 text-white/50 border-white/10"
                         }`}>
-                          {selectedCard.user_edition === "FIRST_EDITION" && <Sparkles size={8} className="text-amber-400" />}
-                          {selectedCard.user_edition === "FIRST_EDITION" ? "FIRST EDITION" : "BASE EDITION"}
+                          {(selectedCard.user_edition === "LEGENDARY" || selectedCard.user_edition === "FIRST_EDITION") && <Sparkles size={8} className="text-amber-400" />}
+                          {selectedCard.user_edition === "FIRST_EDITION" ? "FIRST EDITION" : selectedCard.user_edition === "BASE" ? "BASE EDITION" : selectedCard.user_edition}
                         </span>
                       </div>
                       <span className="text-[10px] font-semibold text-slate-500 tracking-wider">
@@ -306,9 +407,9 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
 
                       <div className="flex items-center gap-2 text-slate-400">
                         <Shield size={14} className="text-purple-400 shrink-0" />
-                        <span>Status edice:</span>
-                        <strong className="text-slate-200 ml-auto font-medium">
-                          {selectedCard.user_edition === "FIRST_EDITION" ? "Limitovaná sběratelská" : "Základní herní"}
+                        <span>Rarita / Status:</span>
+                        <strong className="text-slate-200 ml-auto font-medium uppercase">
+                          {selectedCard.user_edition === "FIRST_EDITION" ? "Limitovaná sběratelská" : selectedCard.user_edition === "BASE" ? "Základní herní" : selectedCard.user_edition}
                         </strong>
                       </div>
                     </div>
