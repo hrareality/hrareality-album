@@ -62,14 +62,6 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
           neonLine: "bg-cyan-500/40",
           color: "rgb(6, 182, 212)",
         };
-      case "CHRISTMAS_2025":
-        return {
-          glow: "hover:shadow-[0_0_20px_rgba(16,185,129,0.25)] border-emerald-500/30",
-          text: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-          neonBg: "from-emerald-950/40 to-black",
-          neonLine: "bg-emerald-500/40",
-          color: "rgb(16, 185, 129)",
-        };
       default:
         return {
           glow: "hover:shadow-[0_0_20px_rgba(168,85,247,0.20)] border-purple-500/20",
@@ -90,7 +82,6 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
       case "founder_drop": return "Founder Drop";
       case "mvp_waitlist": return "MVP Waitlist";
       case "activity": return "Komunitní Aktivita";
-      case "christmas_drop": return "Vánoční Drop 2025";
       default: return via;
     }
   };
@@ -123,39 +114,27 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
             >
               {/* Asset karty nebo silueta */}
               <div className="aspect-[7/10] relative w-full overflow-hidden bg-black/50 flex items-center justify-center border-b border-white/5 select-none">
-                {card.isOwned && card.image_url ? (
+                {card.isOwned ? (
                   <img
-                    src={card.image_url}
+                    src={`/api/cards/${card.card_id}/image?side=front`}
                     alt={card.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
-                  // Prémiová zástupná silueta s neonovým gradientem
-                  <div className={`w-full h-full bg-gradient-to-b flex flex-col items-center justify-center p-6 relative overflow-hidden ${styles.neonBg}`}>
-                    <div className={`absolute w-[150%] h-[1px] rotate-45 opacity-20 top-1/4 ${styles.neonLine}`} />
-                    <div className={`absolute w-[150%] h-[1px] -rotate-45 opacity-20 bottom-1/4 ${styles.neonLine}`} />
-                    
-                    <div className="w-18 h-18 rounded-full border border-white/10 bg-white/5 flex items-center justify-center relative z-10 shadow-inner">
-                      {isFullyHidden ? (
-                        <Lock className="text-white/30 w-9 h-9" />
-                      ) : (
-                        <HelpCircle className="text-white/30 w-9 h-9" />
-                      )}
-                    </div>
-                    
-                    <span className="text-xs font-display font-semibold tracking-[0.3em] uppercase text-white/35 mt-4 relative z-10">
-                      {card.family.replace("_", " ")}
-                    </span>
-                  </div>
+                  <img
+                    src={`/cards/previews/${card.card_id}_blur.png`}
+                    alt={card.name}
+                    className="w-full h-full object-cover opacity-85 filter blur-[1px]"
+                  />
                 )}
 
                 {/* Locked overlay na nevlastněné kartě */}
                 {!card.isOwned && (
-                  <div className="absolute inset-0 bg-black/85 flex flex-col items-center justify-center z-20 backdrop-blur-[2px]">
-                    <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-3">
-                      <Lock size={22} className="text-white/60" />
+                  <div className="absolute inset-0 bg-black/55 flex flex-col items-center justify-center z-20 backdrop-blur-[1px]">
+                    <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-2">
+                      <Lock size={20} className="text-white/60" />
                     </div>
-                    <span className="font-display text-base font-bold text-white/60 tracking-wider uppercase">
+                    <span className="font-display text-xs font-bold text-white/60 tracking-wider uppercase">
                       {isFullyHidden ? "Uzamčeno" : "Nezískáno"}
                     </span>
                   </div>
@@ -252,25 +231,11 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                        className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden rounded-xl border border-white/10"
                        style={{ backfaceVisibility: "hidden" }}
                      >
-                       {selectedCard.image_url ? (
-                         <img
-                           src={selectedCard.image_url}
-                           alt={selectedCard.name}
-                           className="w-full h-full object-cover"
-                         />
-                       ) : (
-                         <div className={`w-full h-full bg-gradient-to-b flex flex-col items-center justify-center p-6 relative overflow-hidden ${styles.neonBg}`}>
-                           <div className={`absolute w-[150%] h-[1px] rotate-45 opacity-20 top-1/4 ${styles.neonLine}`} />
-                           <div className={`absolute w-[150%] h-[1px] -rotate-45 opacity-20 bottom-1/4 ${styles.neonLine}`} />
-                           <div className="w-18 h-18 rounded-full border border-white/10 bg-white/5 flex items-center justify-center relative z-10 shadow-inner">
-                             <HelpCircle className="text-white/30 w-9 h-9" />
-                           </div>
-                           <span className="text-xs font-display font-semibold tracking-[0.3em] uppercase text-white/35 mt-4 relative z-10">
-                             {selectedCard.family.replace("_", " ")}
-                           </span>
-                         </div>
-                       )}
-
+                       <img
+                         src={`/api/cards/${selectedCard.card_id}/image?side=front`}
+                         alt={selectedCard.name}
+                         className="w-full h-full object-cover"
+                       />
                        {/* Badge edice ve foto rohu */}
                        <span className={`absolute top-4 left-4 text-[9px] font-bold font-display px-2 py-0.5 rounded border tracking-wider ${styles.text}`}>
                          {selectedCard.family.replace("_", " ")}
@@ -279,67 +244,19 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
 
                      {/* Rubová strana (Zadní strana karty) */}
                      <div 
-                       className={`absolute inset-0 w-full h-full rounded-xl border p-6 flex flex-col justify-between bg-gradient-to-b ${styles.neonBg} ${styles.glow}`}
+                       className="absolute inset-0 w-full h-full rounded-xl border overflow-hidden bg-black"
                        style={{ 
                          backfaceVisibility: "hidden", 
                          transform: "rotateY(180deg)",
-                         borderWidth: "1.5px"
+                         borderWidth: "1.5px",
+                         borderColor: styles.color
                        }}
                      >
-                       {/* Cybernetický grid na pozadí */}
-                       <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:16px_16px]" />
-
-                       {/* Hlavička zadní strany */}
-                       <div className="flex items-center justify-between relative z-10">
-                         <span className="text-[10px] font-bold font-display text-slate-500 tracking-wider">HRA REALITY</span>
-                         <span className="text-[8px] font-mono text-slate-500 font-bold tracking-widest">{selectedCard.card_id}</span>
-                       </div>
-
-                       {/* Středový hologram */}
-                       <div className="flex-1 flex flex-col items-center justify-center relative z-10 py-4">
-                         <div 
-                           className="w-16 h-16 rounded-full border flex items-center justify-center relative animate-pulse"
-                           style={{ 
-                             borderColor: `rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.35)`,
-                             boxShadow: `0 0 20px rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.2)`
-                           }}
-                         >
-                           <div 
-                             className="w-12 h-12 rounded-full flex items-center justify-center text-center font-display font-extrabold text-[9px] uppercase tracking-wider text-slate-200"
-                             style={{
-                               background: `rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.1)`,
-                               textShadow: `0 0 5px rgba(${styles.color.replace("rgb(", "").replace(")", "")}, 0.8)`
-                             }}
-                           >
-                             ALBUM
-                           </div>
-                         </div>
-                         <span className="font-display font-bold text-[10px] tracking-[0.25em] text-slate-300 uppercase mt-3">
-                           KRONIKA HRA Reality
-                         </span>
-                       </div>
-
-                       {/* Vlastnosti a status */}
-                       <div className="space-y-1.5 relative z-10 border-t border-white/5 pt-4">
-                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
-                           <span>Třída:</span>
-                           <span className="text-slate-200 font-bold">HRÁČ S0</span>
-                         </div>
-                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
-                           <span>Rodina:</span>
-                           <span className="text-slate-200 font-bold">{selectedCard.family.replace("_", " ")}</span>
-                         </div>
-                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
-                           <span>Rarita / Edice:</span>
-                           <span className="text-slate-200 font-bold uppercase">
-                             {selectedCard.user_edition === "FIRST_EDITION" ? "1ST EDITION" : selectedCard.user_edition === "BASE" ? "BASE" : selectedCard.user_edition}
-                           </span>
-                         </div>
-                         <div className="flex justify-between text-[10px] uppercase font-semibold font-display tracking-wider text-slate-400">
-                           <span>Status:</span>
-                           <span className="text-purple-400 font-bold">ODEMČENO</span>
-                         </div>
-                       </div>
+                       <img
+                         src={`/api/cards/${selectedCard.card_id}/image?side=back`}
+                         alt={`${selectedCard.name} - Zadní strana`}
+                         className="w-full h-full object-cover"
+                       />
                      </div>
                    </div>
 
