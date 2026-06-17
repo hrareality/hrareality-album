@@ -128,7 +128,7 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                   </>
                 ) : (
                   <img
-                    src={`/cards/previews/${card.card_id}_blur.png`}
+                    src={`/cards/previews/${card.card_id}_blur.webp`}
                     alt={card.name}
                     className="w-full h-full object-cover opacity-85 filter blur-[0.5px] brightness-[0.75] transition-transform duration-700 group-hover:scale-110"
                   />
@@ -214,7 +214,7 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 transition={{ type: "spring", duration: 0.5 }}
-                className="relative max-w-xl w-full glass-card border-purple-500/20 bg-[#0c0c10] shadow-[0_0_50px_rgba(168,85,247,0.15)] rounded-2xl overflow-hidden z-10 flex flex-col md:flex-row"
+                className="relative max-w-xl w-full max-h-[90vh] overflow-y-auto glass-card border-purple-500/20 bg-[#0c0c10] shadow-[0_0_50px_rgba(168,85,247,0.15)] rounded-2xl z-10 flex flex-col md:flex-row scrollbar-thin"
               >
                 {/* Close Button */}
                 <button
@@ -225,7 +225,7 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                 </button>
 
                  {/* Levá část: Obrázek karty (3D otáčení pro vlastněné, statický náhled pro nevlastněné) */}
-                 <div className="w-full md:w-[45%] flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/5 select-none bg-black/40 p-6 sm:p-8 gap-4 relative">
+                 <div className="w-full md:w-[45%] flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/5 select-none bg-black/40 p-5 md:p-8 gap-4 relative shrink-0">
                    {selectedCard.isOwned ? (
                      <>
                        <div 
@@ -281,9 +281,9 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                        </button>
                      </>
                    ) : (
-                     <div className="w-full aspect-[7/10] relative rounded-xl overflow-hidden border border-white/10 shadow-lg">
+                     <div className="w-full aspect-[7/10] relative rounded-xl overflow-hidden border border-white/10 shadow-lg shrink-0">
                        <img
-                         src={`/cards/previews/${selectedCard.card_id}_blur.png`}
+                         src={`/cards/previews/${selectedCard.card_id}_blur.webp`}
                          alt={selectedCard.name}
                          className="w-full h-full object-cover filter blur-[0.5px] brightness-[0.75]"
                        />
