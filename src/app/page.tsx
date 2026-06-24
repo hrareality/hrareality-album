@@ -23,10 +23,10 @@ export default function Home() {
             <Sparkles size={12} />
             SEASON 0 ALBUM
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-display bg-gradient-to-r from-white via-slate-100 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight font-display bg-gradient-to-r from-white via-slate-100 to-purple-400 bg-clip-text text-transparent text-center">
             iWau HRA REALITY
           </h1>
-          <p className="text-sm text-slate-400 font-medium">
+          <p className="text-sm text-slate-400 font-medium text-center">
             Přestaň jen sledovat svůj život — začni ho hrát.
           </p>
         </div>

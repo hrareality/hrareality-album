@@ -77,7 +77,7 @@ export default async function AlbumPage() {
               HRA REALITY <span className="text-purple-400">ALBUM</span>
             </h1>
           </div>
-
+ 
           <div className="flex items-center gap-4">
             {/* Profil Hráče */}
             <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 py-2 pl-3 pr-5 rounded-2xl">
@@ -101,7 +101,7 @@ export default async function AlbumPage() {
                 </span>
               </div>
             </div>
-
+ 
             {/* Logout button (NextAuth Server Action) */}
             <form
               action={async () => {

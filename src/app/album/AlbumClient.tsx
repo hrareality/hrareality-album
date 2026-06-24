@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, HelpCircle, Sparkles, X, Calendar, Compass, Shield } from "lucide-react";
+import { Lock, HelpCircle, Sparkles, X, Calendar, Compass, Shield, ZoomIn } from "lucide-react";
 
 export interface AlbumCard {
   card_id: string;
@@ -214,7 +214,7 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.9, y: 20 }}
                 transition={{ type: "spring", duration: 0.5 }}
-                className="relative max-w-xl w-full max-h-[90vh] overflow-y-auto glass-card border-purple-500/20 bg-[#0c0c10] shadow-[0_0_50px_rgba(168,85,247,0.15)] rounded-2xl z-10 flex flex-col md:flex-row scrollbar-thin"
+                className="relative max-w-3xl w-full max-h-[90vh] overflow-y-auto glass-card border border-purple-500/20 bg-[#0c0c10] shadow-[0_0_50px_rgba(168,85,247,0.2)] rounded-2xl z-10 flex flex-col md:flex-row scrollbar-thin"
               >
                 {/* Close Button */}
                 <button
@@ -225,11 +225,11 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                 </button>
 
                  {/* Levá část: Obrázek karty (3D otáčení pro vlastněné, statický náhled pro nevlastněné) */}
-                 <div className="w-full md:w-[45%] flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/5 select-none bg-black/40 p-5 md:p-8 gap-4 relative shrink-0">
+                 <div className="w-full md:w-[50%] flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/5 select-none bg-black/40 p-6 md:p-10 gap-5 relative shrink-0" style={{ perspective: "1200px" }}>
                    {selectedCard.isOwned ? (
                      <>
                        <div 
-                         className="w-full relative transition-transform duration-700 cursor-pointer"
+                         className="w-full relative transition-transform duration-700 cursor-pointer hover:scale-[1.025] group/card animate-fade-in"
                          style={{ 
                            transformStyle: "preserve-3d",
                            transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -239,7 +239,7 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                        >
                          {/* Lícová strana (Přední strana karty) */}
                          <div 
-                           className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden rounded-xl border border-white/10"
+                           className="absolute inset-0 w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden rounded-xl border border-white/10 shadow-[0_10px_35px_rgba(0,0,0,0.6)] group-hover/card:shadow-[0_15px_40px_rgba(168,85,247,0.25)] transition-all duration-300"
                            style={{ backfaceVisibility: "hidden" }}
                          >
                            <img
@@ -247,6 +247,17 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                              alt={selectedCard.name}
                              className="w-full h-full object-cover"
                            />
+                           {/* Zoom ikona pro zobrazení originálu */}
+                           <a
+                             href={`/api/cards/${selectedCard.card_id}/image?side=front`}
+                             target="_blank"
+                             rel="noopener noreferrer"
+                             onClick={(e) => e.stopPropagation()}
+                             className="absolute top-4 right-4 z-30 p-2 rounded-lg bg-black/60 border border-white/15 text-slate-400 hover:text-white hover:bg-black/80 transition-all duration-300 shadow-lg cursor-pointer"
+                             title="Otevřít líc v plné velikosti"
+                           >
+                             <ZoomIn size={14} />
+                           </a>
                            {/* Badge edice ve foto rohu */}
                            <span className={`absolute top-4 left-4 text-[9px] font-bold font-display px-2 py-0.5 rounded border tracking-wider ${styles.text}`}>
                              {selectedCard.family.replace("_", " ")}
@@ -255,7 +266,7 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
 
                          {/* Rubová strana (Zadní strana karty) */}
                          <div 
-                           className="absolute inset-0 w-full h-full rounded-xl border overflow-hidden bg-black"
+                           className="absolute inset-0 w-full h-full rounded-xl border overflow-hidden bg-black shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
                            style={{ 
                              backfaceVisibility: "hidden", 
                              transform: "rotateY(180deg)",
@@ -268,13 +279,30 @@ export default function AlbumClient({ cards }: AlbumClientProps) {
                              alt={`${selectedCard.name} - Zadní strana`}
                              className="w-full h-full object-cover"
                            />
+                           {/* Zoom ikona pro zobrazení originálu - style un-mirrors the button */}
+                           <a
+                             href={`/api/cards/${selectedCard.card_id}/image?side=back`}
+                             target="_blank"
+                             rel="noopener noreferrer"
+                             onClick={(e) => e.stopPropagation()}
+                             className="absolute top-4 left-4 z-30 p-2 rounded-lg bg-black/60 border border-white/15 text-slate-400 hover:text-white hover:bg-black/80 transition-all duration-300 shadow-lg cursor-pointer"
+                             style={{ transform: "rotateY(180deg)" }}
+                             title="Otevřít rub v plné velikosti"
+                           >
+                             <ZoomIn size={14} />
+                           </a>
                          </div>
                        </div>
+
+                       {/* Pomocný text */}
+                       <span className="text-[10px] text-slate-500 tracking-wider font-semibold uppercase animate-pulse select-none -mt-2 text-center">
+                         Kliknutím kartu otočíš
+                       </span>
 
                        {/* Tlačítko pro otočení karty */}
                        <button
                          onClick={() => setIsFlipped(!isFlipped)}
-                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-bold text-slate-400 hover:text-white uppercase tracking-wider transition-all duration-300 cursor-pointer"
+                         className="flex items-center gap-1.5 px-4.5 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-bold text-slate-300 hover:text-white uppercase tracking-wider transition-all duration-300 cursor-pointer"
                        >
                          <Compass size={12} className="animate-spin-slow text-purple-400" />
                          Otočit kartu
