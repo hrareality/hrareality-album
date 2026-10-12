@@ -77,4 +77,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: "/",
   },
   secret: process.env.AUTH_SECRET,
+  // Bez tohohle Auth.js v5 na některých hostingech/buildech nedokáže spolehlivě
+  // ověřit, že požadavek přichází z důvěryhodné domény, a selže s obecnou
+  // "Configuration" chybou ještě před výměnou OAuth kódu za token.
+  trustHost: true,
 });
