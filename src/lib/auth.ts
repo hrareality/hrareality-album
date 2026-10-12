@@ -8,9 +8,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientId: process.env.DISCORD_CLIENT_ID || "",
       clientSecret: process.env.DISCORD_CLIENT_SECRET || "",
       authorization: {
+        url: "https://discord.com/api/oauth2/authorize",
         params: {
           scope: "identify",
         },
+      },
+      // Explicitně zadané jako objekty (ne jen text adresy) — obchází krok v Auth.js,
+      // kde se text adresa má sama převést na objekt. V tomhle buildu appky se ten
+      // krok neděje spolehlivě a appka pak omylem zkouší "objevit" Discord adresy
+      // dotazem na authjs.dev, což logicky selže. Takhle to Discordu dá rovnou
+      // hotové adresy a ten krok navíc se vůbec nepoužije.
+      token: {
+        url: "https://discord.com/api/oauth2/token",
+      },
+      userinfo: {
+        url: "https://discord.com/api/users/@me",
       },
     }),
   ],
