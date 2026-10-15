@@ -24,6 +24,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       userinfo: {
         url: "https://discord.com/api/users/@me",
       },
+      // Discord od října 2026 posílá v callbacku parametr "iss" (RFC 9207), který
+      // Auth.js ověřuje proti tomuhle poli. Bez něj appka spadne na "unexpected iss
+      // (issuer) response parameter value", protože si dosadí vlastní placeholder
+      // (authjs.dev) a ten se logicky nikdy neshoduje s tím, co pošle Discord.
+      // Potvrzeno víc nezávislými projekty, co narazily na stejnou chybu ve stejném
+      // období — viz nextauthjs/next-auth issue #12687 a navazující PR.
+      issuer: "https://discord.com",
     }),
   ],
   callbacks: {
